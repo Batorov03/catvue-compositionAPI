@@ -1,0 +1,92 @@
+@import url(../css/component/card.css);
+@import url(../css/component/basket.css);
+@import url(../css/component/header.css);
+@import url(../css/component/section.css);
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+.button:hover {
+  background-color: gray;
+}
+
+.svg {
+  background-color: #6ebbd3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 59px;
+  height: 59px;
+  margin-top: 100px;
+  /*margin-left: 300px;*/
+}
+
+.footer__main {
+  margin-top: 50px;
+  color: white;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 312px;
+}
+
+.block__item {
+  margin-left: 80px;
+}
+
+.s {
+  color: #fff;
+
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-right: 90px;
+  margin-bottom: 30px;
+}
+
+.a {
+  /*display: flex;*/
+  /*align-items: center;*/
+  /*justify-content: center;*/
+
+  color: #fff;
+  width: 401px;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 91.2%;
+}
+
+.e {
+  color: #000;
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  width: 300px;
+  height: 65px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #fff;
+  margin-right: 16px;
+}
+
+.p {
+  width: 250px;
+  border-radius: 10px;
+  background: #6ebbd3;
+  height: 65px;
+}
+
+.t {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding-top: 24px;
+  padding-left: 36px;
+}
