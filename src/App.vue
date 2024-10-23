@@ -93,9 +93,10 @@
               class="card"
               v-for="(product, index) in products"
               :key="product.id"
+              :index="index"
             >
               <div class="card__item">
-                <img class="product-img" src="./images/kot-1.png" alt="" />
+                <img class="product-img" :src="getImageSrc(index)" alt="" />
               </div>
               <h3 class="card__name">{{ product.name }}</h3>
               <div class="description__block">
@@ -110,7 +111,7 @@
 
                 <div class="counter-wrapper">
                   <div class="items__control" @click="decrement(index)">-</div>
-                  <div class="items__current" data-counter>
+                  <div class="items__current">
                     {{ product.quantity }}
                   </div>
                   <div class="items__control" @click="increment(index)">+</div>
@@ -131,16 +132,26 @@
               <div class="card-body">
                 <h5 class="card-title">Ваш заказ</h5>
                 <hr />
-                <div data-cart-empty class="alert alert-secondary" role="alert">
-                  Корзина пуста
-                </div>
+                <div
+                  data-cart-empty
+                  class="alert alert-secondary"
+                  role="alert"
+                ></div>
 
                 <!-- cart-wrapper -->
 
                 <div class="cart-wrapper" v-if="cart.length > 0">
-                  <div class="card__new" v-for="item in cart" :key="item.id">
+                  <div
+                    class="card__new"
+                    v-for="(item, index) in cart"
+                    :key="item.id"
+                  >
                     <div class="card__item-cat">
-                      <img class="product-png" src="#" alt="" />
+                      <img
+                        class="product-png"
+                        :src="getImageSrc(index)"
+                        alt=""
+                      />
                       <div class="d">
                         <h3 class="card__name-cat">{{ item.name }}</h3>
                         <div class="details__cat">
@@ -174,6 +185,7 @@
                     </div>
                   </div>
                 </div>
+                <div class="alert alert-secondary" v-else>корзина пуста</div>
                 <!-- // cart-wrapper
 	
 							<!- Стоимость заказа -->
@@ -250,96 +262,79 @@
   </div>
 </template>
 
-<script>
+<script setup>
   import { ref, computed } from "vue"
 
-  export default {
-    name: "App",
-    components: {
-      // HelloWorld
+  // Список продуктов
+  const products = ref([
+    {
+      id: 1,
+      name: "Товар 1",
+      price: 100,
+      quantity: 1,
     },
-    setup() {
-      // Список продуктов
-      const products = ref([
-        {
-          id: 1,
-          name: "Товар 1",
-          price: 100,
-          quantity: 1,
-        },
-        {
-          id: 2,
-          name: "Товар 2",
-          price: 200,
-          quantity: 1,
-        },
-        {
-          id: 3,
-          name: "Товар 3",
-          price: 300,
-          quantity: 1,
-        },
-      ])
-
-      // Корзина
-      const cart = ref([])
-
-      // Общая стоимость корзины
-      const totalPrice = computed(() => {
-        return cart.value.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        )
-      })
-
-      // Увеличение количества товара на карточке
-      const increment = (index) => {
-        products.value[index].quantity++
-      }
-
-      // Уменьшение количества товара на карточке
-      const decrement = (index) => {
-        if (products.value[index].quantity > 1) {
-          products.value[index].quantity--
-        }
-      }
-
-      // Добавление товара в корзину
-      const addToCart = (product) => {
-        const existingProduct = cart.value.find(
-          (item) => item.id === product.id
-        )
-        if (existingProduct) {
-          existingProduct.quantity += product.quantity // Увеличиваем количество в корзине
-        } else {
-          cart.value.push({ ...product })
-        }
-        product.quantity = 1 // Обнуляем количество товара на карточке после добавления в корзину
-      }
-
-      // Увеличение количества товара в корзине
-      const incrementCart = (item) => {
-        item.quantity++
-      }
-
-      // Уменьшение количества товара в корзине
-      const decrementCart = (item) => {
-        if (item.quantity > 1) {
-          item.quantity--
-        }
-      }
-
-      return {
-        products,
-        cart,
-        totalPrice,
-        increment,
-        decrement,
-        addToCart,
-        incrementCart,
-        decrementCart,
-      }
+    {
+      id: 2,
+      name: "Товар 2",
+      price: 200,
+      quantity: 1,
     },
+
+    {
+      id: 3,
+      name: "Товар 3",
+      price: 300,
+      quantity: 1,
+    },
+  ])
+
+  // Корзина
+
+  const cart = ref([])
+
+  // Увеличение количества товара на карточке
+  const increment = (index) => {
+    products.value[index].quantity++
+  }
+
+  // Уменьшение количества товара на карточке
+  const decrement = (index) => {
+    if (products.value[index].quantity > 1) {
+      products.value[index].quantity--
+    }
+  }
+
+  // Добавление товара в корзину
+  const addToCart = (product) => {
+    const existingProduct = cart.value.find((item) => item.id === product.id)
+    if (existingProduct) {
+      existingProduct.quantity += product.quantity // Увеличиваем количество в корзине
+    } else {
+      cart.value.push({ ...product })
+    }
+    product.quantity = 1 // Обнуляем количество товара на карточке после добавления в корзину
+  }
+
+  // Увеличение количества товара в корзине
+  const incrementCart = (item) => {
+    item.quantity++
+  }
+
+  // Уменьшение количества товара в корзине
+  const decrementCart = (item) => {
+    if (item.quantity > 1) {
+      item.quantity--
+    } else {
+      // Если количество становится 0, удаляем товар из корзины
+      cart.value = cart.value.filter((cartItem) => cartItem.id !== item.id)
+    }
+  }
+  // Общая стоимость корзины
+  const totalPrice = computed(() => {
+    return cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  })
+  const getImageSrc = (index) => {
+    return require(`@/images/kot-${index + 1}.png`)
   }
 </script>
 
